@@ -10,7 +10,7 @@ import datetime
 from feeder import feeder
 
 possible_phases  = ['training', 'validation', 'test', 'conversion']
-phase            = possible_phases[3]
+phase            = possible_phases[0]
 n_steps          = 1072                 # The max number of frames
 n_inputs         = 49                   # Width of each frame
 n_neurons        = [64, 128, 256, 256, 128, 64]
@@ -44,12 +44,12 @@ global_step = tf.Variable(0, trainable=False)
 
 def lstm_cell(n):
     return tf.contrib.rnn.BasicLSTMCell(n)
-
-with tf.variable_scope('forward'):
+initializer = tf.contrib.layers.xavier_initializer()
+with tf.variable_scope('forward', initializer=initializer):
     cells_fw = [lstm_cell(n_neurons[n]) for n in range(n_layers)]
     cells_fw = [rnn.DropoutWrapper(cell, input_keep_prob=keep_prob) for cell in cells_fw]
 
-with tf.variable_scope('backward'):
+with tf.variable_scope('backward', initializer=initializer):
     cells_bw = [lstm_cell(n_neurons[n]) for n in range(n_layers)]
     cells_bw = [rnn.DropoutWrapper(cell, input_keep_prob=keep_prob) for cell in cells_bw]
 
@@ -58,7 +58,7 @@ with tf.variable_scope('backward'):
 outputs = X
 
 for n in range(n_layers):
-    with tf.variable_scope('BiRNN'+str(n)):
+    with tf.variable_scope('BiRNN'+str(n), initializer=initializer):
         outputs, states = tf.nn.bidirectional_dynamic_rnn(cells_fw[n], cells_bw[n], outputs, dtype=tf.float32)
     outputs = tf.concat(outputs, 2)
 
@@ -73,9 +73,6 @@ loss = tf.multiply(tf.divide(tf.reduce_sum(tf.sqrt(tf.reduce_sum(tf.multiply(tf.
 
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
 training_op = optimizer.minimize(loss, global_step=global_step)
-
-init = tf.global_variables_initializer()
-saver = tf.train.Saver(tf.global_variables())
 
 def load_data(phase):
     print "Loading data..."
@@ -106,16 +103,20 @@ def print_step(step, epoch, loss, validation_loss=-1):
         print (str(datetime.datetime.utcnow())+ \
                ' step: {0:<4} epoch: {1: <3} average loss: {2: <5} validation loss: {3: <5}'.format(step, epoch, loss, validation_loss))
 
-
-with tf.Session() as sess:
+config=tf.ConfigProto(allow_soft_placement=True)
+with tf.Session(config=config) as sess:
+#with tf.Session() as sess:
     load_data(phase)
     ckpt = tf.train.get_checkpoint_state(checkpoint_path)
     if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
         print ("Loading model parameters from %s" % ckpt.model_checkpoint_path)
+        saver = tf.train.import_meta_graph(ckpt.model_checkpoint_path+".meta", clear_devices=True)
         saver.restore(sess, ckpt.model_checkpoint_path)
         print ("Model parameters loaded.")
     else:
         print ("Create model with brand new parameters.")
+        init = tf.global_variables_initializer()
+        saver = tf.train.Saver(tf.global_variables())
         sess.run(init)
 
     if phase == 'training':
