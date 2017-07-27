@@ -8,29 +8,27 @@ import math
 import numpy as np
 import datetime
 from feeder import feeder
-'''
-possible phases: 'training', 'validation', 'test', 'conversion'
-'''
-phase = 'conversion'
 
-n_steps = 1072                 # The max number of frames
-n_inputs = 49                  # Width of each frame
-n_neurons = [64, 128, 256, 256, 128, 64]
-#n_neurons = [64, 128, 128, 64]
-n_layers = 6
-learning_rate = 0.0001
+possible_phases  = ['training', 'validation', 'test', 'conversion']
+phase            = possible_phases[3]
+n_steps          = 1072                 # The max number of frames
+n_inputs         = 49                   # Width of each frame
+n_neurons        = [64, 128, 256, 256, 128, 64]
+n_layers         = 6
+learning_rate    = 0.0001
 keep_probability = 0.9
-n_epoches = 50
-batch_size = 10
-check_step = 5
-save_step = check_step * 10
-validation_step = check_step * 5
+n_epoches        = 50
+batch_size       = 10
+check_step       = 5
+save_step        = check_step * 10
+validation_step  = check_step * 5
 
-train_data_path = './bdl2slt/'
-validation_data_path = './bdl2slt_validation/'
-test_data_path = './bdl2slt_test/'
-conversion_data_path = './bdl2slt_conversion/'
-checkpoint_path = os.path.join(train_data_path, 'checkpoints/')
+data_path            = '/Users/ChlorophyII/SPIA/code/SPIA-2017-data/'
+train_data_path      = data_path+'bdl2slt/'
+validation_data_path = data_path+'bdl2slt_validation/'
+test_data_path       = data_path+'bdl2slt_test/'
+conversion_data_path = data_path+'bdl2slt_conversion/'
+checkpoint_path      = data_path+'checkpoints/'
 if not os.path.exists(checkpoint_path):
     os.makedirs(checkpoint_path)
 
@@ -74,7 +72,7 @@ loss = tf.multiply(tf.divide(tf.reduce_sum(tf.sqrt(tf.reduce_sum(tf.multiply(tf.
 # Optimizer
 
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
-training_op = optimizer.minimize(loss, global_step = global_step)
+training_op = optimizer.minimize(loss, global_step=global_step)
 
 init = tf.global_variables_initializer()
 saver = tf.train.Saver(tf.global_variables())
@@ -115,6 +113,7 @@ with tf.Session() as sess:
     if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
         print ("Loading model parameters from %s" % ckpt.model_checkpoint_path)
         saver.restore(sess, ckpt.model_checkpoint_path)
+        print ("Model parameters loaded.")
     else:
         print ("Create model with brand new parameters.")
         sess.run(init)
@@ -123,6 +122,7 @@ with tf.Session() as sess:
         loss_sum = 0
         step = global_step.eval()
         epoch = 1 + (step * batch_size - 1) / training_feeder.n_data # -1 to fix the error
+        print "Start training..."
         while epoch < n_epoches:
             X_batch, Y_batch, weights, batch_filenames = training_feeder.get_batch()
             _, step_loss, step, results = sess.run([training_op, loss, global_step, outputs], feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:keep_probability})
@@ -140,7 +140,17 @@ with tf.Session() as sess:
             if step % save_step == 0:
                 saver.save(sess, checkpoint_path+'vc', global_step=global_step)
                 print ("Parameters saved.")
+    elif phase == 'test':
+        print "Start testing..."
+        X_batch, Y_batch, weights, batch_filenames = test_feeder.get_batch()
+        test_loss = loss.eval(feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:1})
+        print "Test loss: {0}".format(test_loss)
     elif phase == 'conversion':
+        print "Start converting..."
         X_batch, Y_batch, weights, batch_filenames = conversion_feeder.get_batch()
         conversion_result = outputs.eval(feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:1})
         conversion_feeder.save_outputs(conversion_result, batch_filenames)
+        print "Converted data saved at:"
+        print conversion_data_path
+    else:
+        assert False, "\"phase\" is incorrect."

@@ -26,7 +26,7 @@ class feeder(object):
                 weight[:np.shape(data)[0],:] = np.ones_like(data)
                 self._data[filename+'_weight'] = weight
                 self._data[filename+'_shape'] = np.shape(data)
-        else:
+        else: # phase == 'training' or 'validation' or 'test'
             assert len(self._filenames) % 2 == 0, \
                 "Number of sources and number of targets do not match"
             self._n_data = len(self._filenames) / 2
