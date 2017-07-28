@@ -3,11 +3,12 @@ os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import sys
 import tensorflow as tf
 from tensorflow.contrib import rnn
+from tensorflow.python.client import device_lib
 import matplotlib.pyplot as plt
 import math
 import numpy as np
 import datetime
-from feeder import feeder
+from feeder_old import feeder
 
 possible_phases  = ['training', 'validation', 'test', 'conversion']
 phase            = possible_phases[0]
@@ -18,7 +19,7 @@ n_layers         = 6
 learning_rate    = 0.0001
 keep_probability = 0.9
 n_epoches        = 50
-batch_size       = 10
+batch_size       = 1
 check_step       = 5
 save_step        = check_step * 10
 validation_step  = check_step * 5
@@ -31,6 +32,12 @@ conversion_data_path = data_path+'bdl2slt_conversion/'
 checkpoint_path      = data_path+'checkpoints/'
 if not os.path.exists(checkpoint_path):
     os.makedirs(checkpoint_path)
+
+def get_available_devices():
+    local_device_protos = device_lib.list_local_devices()
+    return [x.name for x in local_device_protos if x.device_type == 'GPU' or x.device_type == 'CPU']
+
+print "Available devices:", get_available_devices()
 
 # Model
 
@@ -108,15 +115,14 @@ with tf.Session(config=config) as sess:
 #with tf.Session() as sess:
     load_data(phase)
     ckpt = tf.train.get_checkpoint_state(checkpoint_path)
+    saver = tf.train.Saver(tf.global_variables())
     if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
         print ("Loading model parameters from %s" % ckpt.model_checkpoint_path)
-        saver = tf.train.import_meta_graph(ckpt.model_checkpoint_path+".meta", clear_devices=True)
         saver.restore(sess, ckpt.model_checkpoint_path)
         print ("Model parameters loaded.")
     else:
         print ("Create model with brand new parameters.")
         init = tf.global_variables_initializer()
-        saver = tf.train.Saver(tf.global_variables())
         sess.run(init)
 
     if phase == 'training':
