@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import math
 import numpy as np
 import datetime
-from feeder import feeder
+from feeder_old import feeder
 
 possible_phases  = ['training', 'validation', 'test', 'conversion']
 phase            = possible_phases[0]
@@ -18,9 +18,9 @@ n_layers         = 6
 learning_rate    = 0.0001
 keep_probability = 0.9
 n_epoches        = 50
-batch_size       = 10
-check_step       = 5
-save_step        = check_step * 10
+batch_size       = 2
+check_step       = 1
+save_step        = check_step * 1
 validation_step  = check_step * 5
 
 data_path            = '/Users/ChlorophyII/SPIA/code/SPIA-2017-data/'
@@ -110,6 +110,9 @@ with tf.Session(config=config) as sess:
     ckpt = tf.train.get_checkpoint_state(checkpoint_path)
     if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
         print ("Loading model parameters from %s" % ckpt.model_checkpoint_path)
+        tf.reset_default_graph()
+        print "PHASE", phase
+        ckpt = tf.train.get_checkpoint_state(checkpoint_path)
         saver = tf.train.import_meta_graph(ckpt.model_checkpoint_path+".meta", clear_devices=True)
         saver.restore(sess, ckpt.model_checkpoint_path)
         print ("Model parameters loaded.")
@@ -120,6 +123,7 @@ with tf.Session(config=config) as sess:
         sess.run(init)
 
     if phase == 'training':
+        print "In training"
         loss_sum = 0
         step = global_step.eval()
         epoch = 1 + (step * batch_size - 1) / training_feeder.n_data # -1 to fix the error
@@ -154,4 +158,5 @@ with tf.Session(config=config) as sess:
         print "Converted data saved at:"
         print conversion_data_path
     else:
+        print "WTF"
         assert False, "\"phase\" is incorrect."
