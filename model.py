@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import math
 import numpy as np
 import datetime
-from feeder_old import feeder
+from feeder import feeder
 
 possible_phases  = ['training', 'validation', 'test', 'conversion']
 phase            = possible_phases[0]
@@ -126,6 +126,7 @@ with tf.Session(config=config) as sess:
         sess.run(init)
 
     if phase == 'training':
+        print "In training"
         loss_sum = 0
         step = global_step.eval()
         epoch = 1 + (step * batch_size - 1) / training_feeder.n_data # -1 to fix the error
@@ -160,4 +161,5 @@ with tf.Session(config=config) as sess:
         print "Converted data saved at:"
         print conversion_data_path
     else:
+        print "WTF"
         assert False, "\"phase\" is incorrect."

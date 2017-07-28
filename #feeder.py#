@@ -36,7 +36,8 @@ class feeder(object):
                 assert self._batch_size <= self._n_data, \
                     "Batch_size %r should be smaller than number of data %r" % \
                     (self._batch_size, self._n_data)
-                self._all_data = None
+                self._all_data_source = []
+                self._all_data_target = []
             else:
                 self._batch_size = self._n_data
 
@@ -48,7 +49,7 @@ class feeder(object):
                 data = np.transpose(np.genfromtxt(self._path+filename, delimiter=','))[:,1:]
                 if phase == 'training':
                     print np.shape(self._all_data), np.shape(data)
-                    if self._all_data == None:
+                    if self._all_data == []:
                         self._all_data = data
                     else:
                         self._all_data = np.append(self._all_data, [data], axis=0)
