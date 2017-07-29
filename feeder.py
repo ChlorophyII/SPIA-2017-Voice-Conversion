@@ -36,7 +36,8 @@ class feeder(object):
                 assert self._batch_size <= self._n_data, \
                     "Batch_size %r should be smaller than number of data %r" % \
                     (self._batch_size, self._n_data)
-                self._all_data = None
+                self._all_data_source = []
+                self._all_data_target = []
             else:
                 self._batch_size = self._n_data
 
@@ -47,12 +48,17 @@ class feeder(object):
                 padding = np.zeros([self._n_steps, self._n_inputs])
                 data = np.transpose(np.genfromtxt(self._path+filename, delimiter=','))[:,1:]
                 if phase == 'training':
-                    print np.shape(self._all_data), np.shape(data)
-                    if self._all_data == None:
-                        self._all_data = data
+                    if i % 2 == 0:
+                        if self._all_data_source == []:
+                            self._all_data_source = data
+                        else:
+                            self._all_data_source = np.append(self._all_data_source, data, axis=0)
                     else:
-                        self._all_data = np.append(self._all_data, [data], axis=0)
-#                    self._all_data = [self._all_data, data]
+                        if self._all_data_target == []:
+                            self._all_data_target = data
+                        else:
+                            self._all_data_target = np.append(self._all_data_target, data, axis=0)
+
                 
                 padding[:np.shape(data)[0],:] = data
                 self._data[filename] = padding
@@ -63,12 +69,12 @@ class feeder(object):
                     self._data[filename+'_shape'] = np.shape(data)
                 i += 1
             if phase == 'training':
-                self._mean = np.mean(self._all_data, axis=0)
-                self._std = np.std(self._all_data, axis=0)
-                self._all_data = None
-                print np.shape(self._mean)
-                for filename in self._filenames:
-                    self._data[filename] = (self._data[filename] - self._mean) / self._std
+                self._mean_source = np.mean(self._all_data_source, axis=0)
+                self._std_source = np.std(self._all_data_source, axis=0)
+                self._all_data_source = None
+                self._mean_target = np.mean(self._all_data_target, axis=0)
+                self._std_target = np.std(self._all_data_target, axis=0)
+                self._all_data_target = None
 
     @property
     def n_data(self):
@@ -78,13 +84,14 @@ class feeder(object):
     def mean(self):
         assert self._phase == 'training', \
             "\"mean\" should only be retrieved in training data."
-        return self._mean
+        mean = np.append([[self._mean_source]], [[self._mean_target]], axis=0)
+        return mean
 
     @property
     def std(self):
         assert self._phase == 'training', \
             "\"std\" should only be retrieved in training data."
-        return self._std
+        return np.append([[self._std_source]], [[self._std_target]], axis=0)
 
     def __get_batch_filenames(self):
         if self._phase != 'conversion':

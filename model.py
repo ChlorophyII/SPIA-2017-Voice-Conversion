@@ -10,22 +10,23 @@ import numpy as np
 import datetime
 from feeder import feeder
 
-possible_phases  = ['training', 'validation', 'test', 'conversion']
-phase            = possible_phases[0]
-n_steps          = 1072                 # The max number of frames
-n_inputs         = 49                   # Width of each frame
-n_neurons        = [64, 128, 256, 256, 128, 64]
-n_layers         = 6
-learning_rate    = 0.0001
-keep_probability = 0.9
-n_epoches        = 50
-batch_size       = 1
-check_step       = 5
-save_step        = check_step * 10
-validation_step  = check_step * 5
+possible_phases    = ['training', 'test', 'conversion']
+phase              = possible_phases[2]
+n_steps            = 1072                 # The max number of frames
+n_inputs           = 49                   # Width of each frame
+n_neurons          = [64, 128, 256, 256, 128, 64]
+n_layers           = 6
+learning_rate      = 0.0001
+keep_probability   = 0.9
+n_epoches          = 30
+batch_size         = 1
+check_step         = 10
+save_step          = check_step * 10
+validation_step    = check_step * 5
+with_normalization = 1                    # 1 for turning on normalization
 
 data_path            = '/Users/ChlorophyII/SPIA/code/SPIA-2017-data/'
-train_data_path      = data_path+'bdl2slt/'
+train_data_path      = data_path+'bdl2slt_dev/'
 validation_data_path = data_path+'bdl2slt_validation/'
 test_data_path       = data_path+'bdl2slt_test/'
 conversion_data_path = data_path+'bdl2slt_conversion/'
@@ -37,15 +38,26 @@ def get_available_devices():
     local_device_protos = device_lib.list_local_devices()
     return [x.name for x in local_device_protos if x.device_type == 'GPU' or x.device_type == 'CPU']
 
-print "Available devices:", get_available_devices()
+print ("Available devices:", get_available_devices())
 
 # Model
 
 X = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
 Y = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
 W = tf.placeholder(tf.float32, [None, n_steps, n_inputs])
+MS = tf.placeholder(tf.float32, [1, n_inputs])
+MT = tf.placeholder(tf.float32, [1, n_inputs])
+STD_S = tf.placeholder(tf.float32, [1, n_inputs])
+STD_T = tf.placeholder(tf.float32, [1, n_inputs])
 keep_prob = tf.placeholder(tf.float32)
 global_step = tf.Variable(0, trainable=False)
+normalization = tf.Variable(with_normalization, trainable=False)
+
+with tf.variable_scope('statistics'):
+    mean_source = tf.Variable(MS)
+    mean_target = tf.Variable(MT)
+    std_source  = tf.Variable(STD_S)
+    std_target  = tf.Variable(STD_T)
 
 # Cells
 
@@ -62,7 +74,10 @@ with tf.variable_scope('backward', initializer=initializer):
 
 # Layers
 
-outputs = X
+if normalization == 1:
+    outputs = tf.divide(tf.subtract(X, mean_source), std_source)
+else:
+    outputs = X
 
 for n in range(n_layers):
     with tf.variable_scope('BiRNN'+str(n), initializer=initializer):
@@ -70,6 +85,8 @@ for n in range(n_layers):
     outputs = tf.concat(outputs, 2)
 
 outputs = tf.layers.dense(outputs, n_inputs)
+if normalization == 1:
+    outputs = tf.add(tf.multiply(outputs, std_source), mean_source)
 
 # Loss function
 
@@ -82,25 +99,25 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
 training_op = optimizer.minimize(loss, global_step=global_step)
 
 def load_data(phase):
-    print "Loading data..."
+    print ("Loading data...")
     if phase == 'training' or phase == 'validation':
         global training_feeder
         training_feeder = feeder(batch_size, train_data_path, n_steps, n_inputs, phase='training')
-        print "\"training_feeder\" is ready."
+        print ("\"training_feeder\" is ready.")
         global validation_feeder
         validation_feeder = feeder(-1, validation_data_path, n_steps, n_inputs, phase='validation')
-        print "\"validation_feeder\" is ready."
+        print ("\"validation_feeder\" is ready.")
     elif phase == 'test':
         global test_feeder
         test_feeder = feeder(-1, validation_data_path, n_steps, n_inputs, phase='test')
-        print "\"test_feeder\" is ready."
+        print ("\"test_feeder\" is ready.")
     elif phase == 'conversion':
         global conversion_feeder
         conversion_feeder = feeder(-1, conversion_data_path, n_steps, n_inputs, phase='conversion')
-        print "\"conversion_feeder\" is ready."
+        print ("\"conversion_feeder\" is ready.")
     else:
         assert False, "\"phase\" is incorrect."
-    print "Data loaded."
+    print ("Data loaded.")
 
 def print_step(step, epoch, loss, validation_loss=-1):
     if validation_loss == -1:
@@ -123,14 +140,13 @@ with tf.Session(config=config) as sess:
     else:
         print ("Create model with brand new parameters.")
         init = tf.global_variables_initializer()
-        sess.run(init)
+        sess.run(init, feed_dict={MS:training_feeder.mean[0], MT:training_feeder.mean[1], STD_S:training_feeder.std[0], STD_T:training_feeder.std[1]})
 
     if phase == 'training':
-        print "In training"
         loss_sum = 0
         step = global_step.eval()
         epoch = 1 + (step * batch_size - 1) / training_feeder.n_data # -1 to fix the error
-        print "Start training..."
+        print ("Start training...")
         while epoch < n_epoches:
             X_batch, Y_batch, weights, batch_filenames = training_feeder.get_batch()
             _, step_loss, step, results = sess.run([training_op, loss, global_step, outputs], feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:keep_probability})
@@ -149,17 +165,16 @@ with tf.Session(config=config) as sess:
                 saver.save(sess, checkpoint_path+'vc', global_step=global_step)
                 print ("Parameters saved.")
     elif phase == 'test':
-        print "Start testing..."
+        print ("Start testing...")
         X_batch, Y_batch, weights, batch_filenames = test_feeder.get_batch()
         test_loss = loss.eval(feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:1})
-        print "Test loss: {0}".format(test_loss)
+        print ("Test loss: {0}".format(test_loss))
     elif phase == 'conversion':
-        print "Start converting..."
+        print ("Start converting...")
         X_batch, Y_batch, weights, batch_filenames = conversion_feeder.get_batch()
         conversion_result = outputs.eval(feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:1})
         conversion_feeder.save_outputs(conversion_result, batch_filenames)
-        print "Converted data saved at:"
+        print ("Converted data saved at:")
         print conversion_data_path
     else:
-        print "WTF"
         assert False, "\"phase\" is incorrect."
