@@ -53,8 +53,6 @@ STD_S = tf.placeholder(tf.float32, [1, n_inputs])
 STD_T = tf.placeholder(tf.float32, [1, n_inputs])
 keep_prob = tf.placeholder(tf.float32)
 global_step = tf.Variable(0, trainable=False)
-normalization = tf.Variable(with_normalization, trainable=False)
-attention     = tf.Variable(with_attention, trainable=False)
 
 with tf.variable_scope('statistics'):
     mean_source = tf.Variable(MS)
@@ -77,7 +75,8 @@ with tf.variable_scope('backward', initializer=initializer):
 
 # Layers
 
-if normalization == 1:
+if with_normalization == 1:
+    print("using normalization")
     outputs = tf.divide(tf.subtract(X, mean_source), std_source)
 else:
     outputs = X
@@ -87,7 +86,8 @@ for n in range(n_layers):
         outputs, states = tf.nn.bidirectional_dynamic_rnn(cells_fw[n], cells_bw[n], outputs, dtype=tf.float32)
     outputs = tf.concat(outputs, 2)
 
-if attention == 1:
+if with_attention == 1:
+    print("using attention")
     attention_mec = tf.contrib.seq2seq.LuongAttention(attention_size,outputs)
     attention_cell = tf.contrib.rnn.LSTMCell(attention_size)
     attention_cell = tf.contrib.seq2seq.AttentionWrapper(attention_cell,attention_mec,alignment_history=True)
@@ -95,7 +95,7 @@ if attention == 1:
     
 outputs = tf.layers.dense(outputs, n_inputs)
 
-if normalization == 1:
+if with_normalization == 1:
     outputs = tf.add(tf.multiply(outputs, std_source), mean_source)
     
 # Loss function
