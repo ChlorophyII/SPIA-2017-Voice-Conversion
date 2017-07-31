@@ -19,18 +19,18 @@ n_layers           = 6
 learning_rate      = 0.0001
 keep_probability   = 0.9
 n_epoches          = 30
-batch_size         = 1
-check_step         = 10
+batch_size         = 10
+check_step         = 5
 save_step          = check_step * 10
 validation_step    = check_step * 5
 with_normalization = 1                    # 1 for turning on normalization
 
 data_path            = '/Users/ChlorophyII/SPIA/code/SPIA-2017-data/'
-train_data_path      = data_path+'bdl2slt_dev/'
-validation_data_path = data_path+'bdl2slt_validation/'
-test_data_path       = data_path+'bdl2slt_test/'
-conversion_data_path = data_path+'bdl2slt_conversion/'
-checkpoint_path      = data_path+'checkpoints/'
+train_data_path      = data_path+'cut'+'_training/'
+validation_data_path = data_path+'cut'+'_validation/'
+test_data_path       = data_path+'cut'+'_test/'
+conversion_data_path = data_path+'cut'+'_conversion/'
+checkpoint_path      = data_path+'checkpoints_cut_normal/'
 if not os.path.exists(checkpoint_path):
     os.makedirs(checkpoint_path)
 

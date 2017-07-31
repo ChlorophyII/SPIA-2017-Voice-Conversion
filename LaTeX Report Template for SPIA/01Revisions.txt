@@ -1,0 +1,16 @@
+Revisions.txt 
+=============
+
+Revisions made to the Master LaTeX Template after June 22, 2015
+
+Report Coordinators can refer to this file to see whether corrections or 
+updates have been made.
+
+The folder containing this version is named "Master LaTeX Report Template 2015".
+Please report problems and suggested improvements to the RIPS director.
+Date on Title page should reflect most recent revision.
+=================================================================================
+
+DATE:	   	SECTION, 	CHANGE
+
+6/22/15				Starting new version for 2015.

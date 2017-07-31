@@ -1,0 +1,52 @@
+\chapter{Dealing with bibliographic references}\label{Ch:References}
+
+
+{\LaTeX} uses a tool called {\BibTeX} to help you manage bibliographic references.
+The references are maintained in a separate file, with a \texttt{.bib}
+extension. For example, in this sample RIPS report the references
+are in the \texttt{Biblio.bib} file, which is then included
+from the main document.
+
+{\BibTeX} affords a variety of \emph{entry types} (also known as \emph{record types}) for bibliographic records of books, articles, proceedings, theses, and many others.  
+A good discussion of these and of the \emph{field entries} used for each type, find the \textsc{Wikipedia} article for {\BibTeX}.
+You can use any editor to create your own bibliographic records, but you might find useful open-source tools available on the web.%%
+\footnote{
+Appendix \ref{App:BibTeX-Records} lists some examples of record types and fields used for {\BibTeX} entries.
+}
+%%
+
+If you would like to include a reference to a book or an article in the
+{\BibTeX} file, you can either create its {\BibTeX} entry by hand, or get it 
+ready-made as a BibTeX entry from a web source. 
+\emph{Google Scholar}, which you can find on the internet, is free and easy to use after you have set up preferences to include citations in a {\BibTeX} format.
+Ask your Academic Mentor for other suggestions.%%
+
+
+After you update your report's references file, to see the updated
+references displayed in the report you need to run {\LaTeX} on the
+report, then run {\BibTeX} (on the report, not on the references
+file), and then run {\LaTeX} on the report again, once or a couple
+of times.%%
+\footnote{
+Some typesetters can operate in a mode that performs all these operations in the correct sequence automatically.
+}
+%%
+Don't be surprised if it takes you awhile to get used to
+this routine---you won't be the first. Look for the {\BibTeX} icon or \emph{Bibliography} tab
+somewhere in your editor's toolbar.
+
+For example, to cite the book \emph{More Math Into {\LaTeX}} by Gr\"{a}tzer \cite{gratzer}, first look in the \texttt{Biblio.bib} file to find that the entry for that reference is labeled \texttt{gratzer}.
+Then enter the code \verb1\cite{gratzer}1 in your text.
+After
+\begin{itemize}
+\item running {\LaTeX} on your document once,
+\item then running {\BibTeX} on your document once,
+\item then running {\LaTeX} on your document twice,
+\end{itemize}
+you will find the citation ``\cite{gratzer}'' obtained in the preceding paragraph, which is the correct number the reference for Gr\"{a}tzer's book winds up as in the Bibliography of this report.
+Note that you do not run {\LaTeX} on the \texttt{.bib} file.
+
+{\BibTeX} does take getting used to.
+You may need some help from an experienced {\LaTeX}er when getting started.
+
+\endinput

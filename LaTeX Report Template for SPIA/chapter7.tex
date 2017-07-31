@@ -1,0 +1,285 @@
+\chapter{Some extra advice for starting up with {\LaTeX}}\label{Ch:ExtraAdvice}
+
+The following is a small collection of answers to questions RIPS students have asked.
+
+\begin{enumerate}
+
+%%%%
+\item {\bf How do I open and modify {\LaTeX} files, as well as view the results?}
+%%%%
+
+Several {\LaTeX} typesetters are available on the IPAM network.
+The default options are activated by clicking on the  main page for the report template,\\ 
+
+\centerline{\texttt{z-Report-Master-2015.tex}}
+\vspace{5pt}
+
+The present version of the template is being maintained using the TeXworks typesetter "pdfLaTeX."
+For more information about other options, see the  README file listed among the files used in construction this report.
+
+\hspace{15pt} The template is divided into several chapters, appendixes and other files with functions identifiable by their names coded in {\LaTeX} (files ending in ``.tex'') along with some graphics files coded as Encapsulate Postscript (``.eps'').  
+If you modify any one of these source files, you will need to run the typesetter on the main \texttt{z-Report-Master-2015.tex} file.
+See Chapter \ref{Ch:References} for tips handling bibliographic references.
+And see Appendix \ref{App:SourceLocation} for location of the {\LaTeX} sources relating to this sample report.
+
+%%%%
+\item {\bf Should I use a single-sided or double-sided format for my report?}
+%%%%
+
+Clearly, double-sided printing saves paper.
+But this is not as simple as it seems.
+Best to explain this in vocabulary used by publishers: {\em opening}, {\em recto}, and {\em verso}:
+An {\em opening} is the pair of pages you see when you open a book at random; the recto is the page on the right-hand side, and the verso is the page on the left-hand side --- or, on a single leaf, recto is the front side and verso is the opposite side.
+When you open almost any book at the start of a new chapter, the first page of the chapter will appear on the right-hand page---{\em recto}.
+This is true whether or not the left-hand page of the opening---{\em verso}---is blank.
+That's the way it should be in your report.
+Each major section of your report, not just chapters, should begin on a recto.
+
+\hspace{15pt} Rectos are always odd-numbered.
+Very likely, you will not get these results if you submit your single-sided report for double-sided copying on a printer.
+There are some {\LaTeX} acrobatics you must specify to make your double-sided report turn out with proper recto-verso pagination, the code for which is built into  \texttt{z-Report-Master-2014.tex};
+you will see which document class to use---and which to comment out---at the top of the file.
+
+%%%%
+\item {\bf What format should I use for my report for the editing process, and for the final copies?}
+%%%%
+
+See Chapter \ref{Ch:Polishing}.
+
+%%%%
+\item {\bf How do I convert images (for example, in {\it \textsc{jpg}}, {\it \textsc{gif}}, {\it \textsc{bmp}}, or {\it \textsc{png}}   formats) to {\it \textsc{eps}}? }
+%%%%
+
+There is a simple procedure using a ``Terminal'' on an iMac: just invoke the ``\texttt{convert}'' command and specify the source and target file and coding.
+Other methods can be complicated.
+
+\hspace{15pt}Another possibility is to read them in \textsc{Matlab} and export them to \textsc{eps} from there.
+Here's a sample code:
+
+\begin{verbatim}
+   A=imread('MyFigure.jpg');            % read the image
+   imshow(A);                           % show it on the screen
+   saveas(gcf, 'MyFigure.eps', 'psc2'); % export to color eps
+\end{verbatim}
+
+Note that this can create large \textsc{eps} files.
+Simple diagrams are better recreated in \textsc{Inkscape} or \textsc{Matlab} and then exported to \textsc{eps}.
+
+%%%%
+\item {\bf What if a figure caption is too long to fit nicely in the list of figures?}
+%%%%
+
+Chapter \ref{Ch:figures} discusses figures in general;
+there you can see an example of how a figure caption is created.
+Ordinarily, the figure caption provides the text for the title for the figure in the report's List of Figures.
+
+\hspace{15pt}But what if the figure caption is too long or otherwise inappropriate for using in the List of Figures?
+The solution is to include an alternative title in square brackets (before the curly brackets---braces) in the caption declaration:
+
+\begin{quote}
+{\tt $\backslash$caption[Alternative title for List of Figures]\{The caption that appears under your figure; it can be more complex than is appropriate for a title in the List of Figures.\}}
+\end{quote}
+
+The same technique is used for providing alternative titles for tables---and for running heads as well, although these are not used in your RIPS report.
+
+\item {\bf A useful little thing to know about fractions:} When you compose an inline fraction, sometimes it looks too small: $\frac{x}{y}$.  Instead of using the {\LaTeX} ``\texttt{frac}'' function, try ``\texttt{dfrac}'' to increase the size: $\dfrac{x}{y}$.
+
+\item {\bf Where can I find more information on {\LaTeX}?}
+
+The internet is a great resource.  Search and ye shall find! See, for example,\\
+
+\centerline{$\texttt{http://latex-project.org/}$}
+\vspace{5pt}
+
+\hspace{15pt}Or you may want to get one of the books listed  in the Bibliography, for example, \emph{More Math Into {\LaTeX}} \cite{gratzer}, or the \emph{{\LaTeX}Companion} \cite{Mittelbach}.
+Your mentor most likely knows a lot of {\LaTeX} too, so don't hesitate to ask for help.
+
+%%%%
+\item {\bf Where can I find standard references to resolve finer points of style?}
+%%%%
+
+There are many good references, but the RIPS director uses the $16^{\text{th}}$ edition of \emph{The Chicago Manual of Style} \cite{Chicago-Manual} and its companion \emph{A Manual for Writers of Research Papers, Theses, and Dissertations: Chicago Style for Students and Researchers} \cite{Turabian} as  references of first resort, followed by the handy compact reference \emph{Hart's New Rules} \cite{NewHartRules}.
+Other highly developed style guides are the \emph{MLA Handbook for Writers of Research Papers} \cite{MLAHandbook} and the \emph{Publication Manual of the American Psychological Association} \cite{APA}.
+
+\hspace{15pt}The examples in Gr\"{a}tzer's \emph{More Math into {LaTeX}} \cite{gratzer} can also be used to resolve some style questions as well as questions about {\LaTeX} coding.
+See the bibliography pages for other good resources.
+
+%%%%
+\item {\bf How should I punctuate itemized and enumerated lists?}
+%%%%
+
+Here's a rule that gets broken easily because the items in a list are sometimes not just a single phrase or sentence.
+Usually you will introduce your list with a sentence or phrase that ends with a colon.
+In that case:
+
+\begin{itemize}
+\item begin each item with a lower-case initial letter;
+\item terminate all but the last sentence with a semicolon or a phrase with a comma;
+\item end the last sentence or phrase with a period.
+\end{itemize}
+
+\hspace{15pt}Here's an example that shows how any rule starts to get tricky:
+
+\begin{itemize}
+\item begin each item with a lower-case initial letter;
+\item terminate the last sentence with a semicolon or a phrase with a comma,
+\item but end the last sentence or phrase with a period.
+\end{itemize}
+
+\hspace{15pt}I think the comma at the end of the second item is correct, but you may be tempted to place a semicolon there to be consistent.
+And in case you have more than one sentence, or a mixture of a sentence and a phrase on a single line, What then?
+I'd prefer to avoid the latter complication if possible by make each item a simple sentence or phrase, and use only sentences or only phrases in a single list.
+
+%%%%
+\item {\bf Are there standard fonts for representing filenames, file extensions, URLs?}
+%%%%
+
+In this document we have used \texttt{teletype} for filenames and \textsc{small caps} for file extensions, program names, and the names of software packages.
+For URLs, we use \texttt{teletype}.
+
+%%%%
+\item {\bf How do I write the {\tt tilde} symbol?}
+%%%%
+
+Just hitting the tilde   key on the keyboard won't work, as that
+character is special to {\LaTeX}. Instead, use the \verb1\sim1
+command, which gives $\sim$. The reason the plain keyboard tilde
+character is special is that it is used for a non-breaking space,
+e.g., by writing
+
+\hspace{35pt} \verb+Dr.~Jones+
+
+instead of simply
+
+\hspace{35pt} \verb+Dr. Jones+
+
+This is how to tell {\LaTeX} never to break a line after \verb+`Dr.'+ with
+\verb+`Jones'+ starting at the beginning of the next line.
+
+%%%%
+\item {\bf {\LaTeX} and {\BibTeX} reserved characters}
+%%%%
+
+These characters are interpreted in special ways by {\LaTeX} typesetters: 
+\vspace{5pt}
+
+\centerline{\# \$ \% \^{} \& \_ \{ \} \~{} \textbackslash{}}
+
+You may print them in your text by ``escaping'' them with the backslash (\textbackslash{}), e.g.,  use \textbackslash{}\# in your {\LaTeX} code.
+If not properly escaped, these characters can cause mysterious errors, especially in {\BibTeX} files because the source of the error can be inadequately-referenced by {\LaTeX}.
+
+%%%%
+\item {\bf Why do {\BibTeX} {\tt bib} files so often fail to compile?}
+%%%%
+
+If you have not used {\BibTeX} before, you may find it a bit difficult getting used to it.
+It's not a part of {\LaTeX}, so it requires some special handling.
+Most {\LaTeX} users find it to be worth the effort, since it allows them to keep their references in a separate file (or files) that can easily be re-used.
+{\BibTeX} makes it easy to reference items and to present them in a consistent format.
+
+\hspace{15pt}No doubt about it, {\BibTeX} does have some fussy features.
+For example, your reference list will crash if it contains reserved characters, e.g., in URLs.  The point of confusion is that some characters reserved by {\BibTeX} are not reserved elsewhere or the normal methods of escape don't work, so these characters can be pesky and catch you unawares.
+Here are some character encodings that are useful as alternatives in your bib file:
+
+\begin{itemize}
+  \item use \{\verb1\&1\} for  \emph{ampersand};
+  \item use \{\verb1\_1\} for \emph{underbar};
+  \item use \{\verb1\sim1\} for \emph{tilde}.
+\end{itemize}
+
+The curly brackets are not strictly necessary, but they are used to avoid needing a space before a character that follows the symbol.  
+
+%%%%
+{\bf Which bibliographic style should I use? }
+%%%%
+
+There are many options. 
+For example, the \emph{siam} and \emph{ieeetr} styles produce good results for RIPS reports.
+
+\hspace{15pt}Your bibliography should distinguish book titles by printing them in \emph{italic} font.  But titles of written materials that appear within a collection such as journal articles are distinguished by surrounding them with double quote and  are preferably printed in \emph{roman} font, and preferably the title of the \emph{collection} is italicized.
+
+\hspace{15pt}Both the ``siam'' and ``ieeetr'' italicize book titles.
+However they treat article and collection titles, and multiple entries by the same author, differently.
+
+\hspace{15pt}The advantage of the ``siam'' style is that it aggregates books or articles by the same author in reverse-chronological order under a single author entry.  
+A disadvantage is that it also italicizes article titles and does not quote them, and it prints collection titles in roman font.
+The quotation problem is easily solved by your supplying them in your \texttt{bib} file by surrounding the title with two back quotes on the left and two apostrophes on the right, but you cannot switch the italic and roman fonts, which is unfortunate but acceptable.
+
+\hspace{15pt}An article is cited here as an example using the ``siam'' bibiliographic style: ``A Set of Postulates for Plane Geometry (Based on Scale and Protractors)'' by G. D. Birkhoff \cite{Birkhoff:1932}.
+Take a look at the \texttt{bib} file to see how it was necessary to surround the title of the article  with quotes;  moreover, curly braces were used to prevent  {\BibTeX} from reducingl the capital letters in the title to lowercase.
+
+\hspace{15pt}The ``ieeetr'' style differentiates book and article titles, and titles for articles in collections, correctly. 
+However, if there are multiple books or articles by an author, ``ieeetr'' awkwardly tosses additonal entries to the end. 
+
+\hspace{15pt}Check the available options to make sure you can get a good result.
+
+%%%%
+\item {\bf Where do inline citations go within the ``body text''?}
+%%%%
+
+The \emph{body text} or \emph{running text} is the main text in a book or report; it excludes chapter and section heads, front matter, back matter and sometimes, depending on context, footnotes and captions.  
+Generally, it's what the author wrote and not the text supplied by the publisher.
+For the purpose here, I include footnotes and captions.
+
+\hspace{15pt}\emph{The Chicago Manual of Style} \cite{Chicago-Manual} is silent on where to place inline citations, whether within a sentence or after the period, 
+but Turabian gives examples of citations within sentences and none after the period \cite{Turabian}.
+According to  \emph{The Chicago Manual of Style} you can do something like this for a block quotation --- note that there are no quotation marks, and authorship (or citation) is dropped in parentheses below the quotation:
+
+\begin{quote}
+O for a Muse of fire, that would ascend\\
+The brightest heaven of invention,\\
+A kingdom for a stage, princes to act\\
+And monarchs to behold the swelling scene!
+
+\hspace{15pt}(Prologue to ``Henry V''  by William Shakespeare)
+\end{quote}
+
+%%%%
+\item {\bf How do I control the page placement of figures and tables?}
+%%%%
+
+The placement algorithms in {\LaTeX} are complicated.
+The \textsc{graphicx} package used by the RIPS Master Template is discussed in extensive detail in the  athoritative ``Using Imported Graphics in LATEX and pdfLATEX'' by Keith Reckdahl
+at
+\vspace{5pt}
+
+\centerline{ \texttt{ http://ctan.math.washington.edu/tex-archive/info/}}
+\centerline{ \texttt{epslatex/english/epslatex.pdf}}
+
+\hspace{15pt}For a start, see Sections 18 and 19: ``Customizing Float Placement'' and ``Customizing the Figure Environment.''
+Note especially Section 21, ``Non-Floating Figures:''  
+
+\begin{quote}
+Since non-floating figures can produce large sections of vertical whitespace, non-
+floating figures are generally considered poor typesetting style. Instead, users are
+strongly encouraged to use the figure environment’s \verb#[!ht]# optional argument which
+moves the figure only if there is not enough room for it on the current page.
+\end{quote}
+
+\hspace{15pt}See the internet for other solutions, e.g., for fixing  gross placement errors using
+ commands like:
+%\begin{center}
+{\verb#\raggedbottom, \baselinestretch, \parskip#}.
+%\end{center}
+
+%%%%
+\item {\bf How long should my report be?}
+%%%%
+
+Depending on how formal you choose to make your midterm report, it can evolve into the final report, so the latter will usually be longer than the midterm report but not necessarily.  
+The dissertation of at least one Nobel Laureate was under thirty pages in length, so it is possible to report winning results succinctly.
+Here's a rule of thumb:
+
+\hspace{15pt}Just decide what points you want to make, and then make all your points in clear language, using figures and tables wherever they facilitate understanding. 
+It's hard to be succinct when you don't have a lot of time to prune your text.
+But try to be as brief as possible without injuring clarity.
+
+\hspace{15pt}After you have done that, check to see whether your report has all the major ingredients described in this Sample Report, especially in Chapters 1 \& 2.
+Considered as a draft on its way to becoming the final report, the midterm report may be written a little more loosely and contain things that you may decide to prune later.
+
+\hspace{15pt}If everything is there, including the extra pages created by LaTex, such as table of contents, list of figures, list of tables, as necessitated by your text, then that's how long your report should be.
+
+\end{enumerate}
+
+
+\endinput

@@ -1,0 +1,28 @@
+\contentsline {chapter}{Abstract}{3}
+\contentsline {chapter}{Acknowledgments}{5}
+\contentsline {chapter}{\numberline {1}Introduction}{13}
+\contentsline {chapter}{\numberline {2}A general outline of the body of the RIPS report}{15}
+\contentsline {section}{\numberline {2.1}The Introduction}{15}
+\contentsline {section}{\numberline {2.2}Additional Chapters}{16}
+\contentsline {section}{\numberline {2.3}The Conclusion}{16}
+\contentsline {section}{\numberline {2.4}Parting Words about Back Matter: The Bibliography}{16}
+\contentsline {chapter}{\numberline {3}Mathematical typesetting}{17}
+\contentsline {chapter}{\numberline {4}Sample figures and tables}{19}
+\contentsline {section}{\numberline {4.1}Figures}{19}
+\contentsline {subsubsection}{Formats accepted by {\LaTeX }}{19}
+\contentsline {subsubsection}{Creating figures with {\textsc {Matlab}}}{19}
+\contentsline {subsubsection}{Software for drawing diagrams}{21}
+\contentsline {section}{\numberline {4.2}Tables}{22}
+\contentsline {subsubsection}{Style tips about figures and tables}{23}
+\contentsline {section}{\numberline {4.3}Picking nits}{23}
+\contentsline {chapter}{\numberline {5}Dealing with bibliographic references}{25}
+\contentsline {chapter}{\numberline {6}Giving credit where credit is due}{27}
+\contentsline {chapter}{\numberline {7}Some extra advice for starting up with {\LaTeX }}{29}
+\contentsline {chapter}{\numberline {8}Final comments about polishing your report for publication}{35}
+\contentsline {chapter}{APPENDIXES}{}
+\contentsline {chapter}{\numberline {A}{{\rmfamily B\kern -.05em\textsc {i\kern -.025em b}\kern -.08emT\kern -.1667em\lower .7ex\hbox {E}\kern -.125emX}} Sample Records, Record Types and Fields}{37}
+\contentsline {chapter}{\numberline {B}Where to find this sample RIPS report?}{41}
+\contentsline {chapter}{\numberline {C}Glossary}{43}
+\contentsline {chapter}{\numberline {D}Abbreviations}{45}
+\contentsline {chapter}{REFERENCES}{}
+\contentsline {chapter}{Selected Bibliography Including Cited Works}{47}

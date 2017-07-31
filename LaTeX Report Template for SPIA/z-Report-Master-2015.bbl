@@ -1,0 +1,81 @@
+\begin{thebibliography}{10}
+
+\bibitem{AMS}
+{\sc {American Mathematical Society}}, {\em {\em MathSciNet: Mathematical
+  Reviews on the Web}}.
+\newblock $\langle$\texttt{http://www.ams.org/mathscinet/$\rangle$}. Accessed
+  June 17, 2009. \\ \\ Because an online reference may be changed at any time,
+  it is conventional to tie the reference to the date when the resource was
+  accessed.
+
+\bibitem{APA}
+{\sc {American Psychological Association}}, {\em Publication Manual of the
+  American Psychological Association}, American Psychological Association,
+  Washington, DC, fifth~ed., 2001.
+\newblock \\ \\ A standard reference, focused on scientific publication.
+
+\bibitem{Birkhoff:1932}
+{\sc {Birkhoff, George David}}, {\em ``{A Set of Postulates for Plane Geometry
+  (Based on Scale and Protractors)}''}, Annals of Mathematics, 33 (1932).
+
+\bibitem{MLAHandbook}
+{\sc J.~Gibaldi}, {\em MLA Handbook for Writers of Research Papers}, The Modern
+  Language Association, New York, sixth~ed., 2003.
+\newblock \\ \\ One of the standard style manuals for scholarly writing.
+
+\bibitem{Gratzer3}
+{\sc G.~Gr\"{a}tzer}, {\em Math Into {\LaTeX}}, Birkh\"{a}user, Boston, MA,
+  third~ed., 2000.
+
+\bibitem{gratzer}
+\leavevmode\vrule height 2pt depth -1.6pt width 23pt, {\em More Math Into
+  {\LaTeX}}, Birkh\"{a}user, Boston, MA, fourth~ed., 2007.
+
+\bibitem{Higham}
+{\sc N.~J. Higham}, {\em Handbook of writing for the mathematical sciences},
+  Society for Industrial and Applied Mathematics (SIAM), Philadelphia, PA,
+  second~ed., 1998.
+
+\bibitem{Krantz}
+{\sc S.~G. Krantz}, {\em Mathematical publishing}, American Mathematical
+  Society, Providence, RI, 2005.
+\newblock \\ \\ Sage advice from a widely published mathematician.
+
+\bibitem{Latex-Manual}
+{\sc L.~Lamport}, {\em {\LaTeX}: A Document Preparation System},
+  Addison-Wesley, Boston, MA, USA, second~ed., 1994.
+\newblock \\ \\ It is conventional for an online resource to specify the date
+  on which the resource was most recently accessed.
+
+\bibitem{Mittelbach}
+{\sc F.~Mittelbach and M.~Goossens}, {\em The {\LaTeX} Companion},
+  Addison-Wesley Longman Publishing Co., Inc., Boston, MA, USA, second~ed.,
+  2004.
+
+\bibitem{NewHartRules}
+{\sc R.~M. Ritter}, {\em New Hart's Rules: The Handbook of Style for Writers
+  and Editors}, Oxford University Press, Oxford, 2005.
+\newblock \\ \\ A succinct and authoritative style manual for British authors,
+  with pointers for American English, adapted from the {\em Oxford Guide to
+  Style}.
+
+\bibitem{Turabian}
+{\sc K.~L. Turabian}, {\em A Manual for Writers of Research Papers, Theses, and
+  Dissertations: Chicago Style for Students and Researchers}, University of
+  Chicago Press, Chicago, seventh~ed., 2007.
+
+\bibitem{Chicago-Manual}
+{\sc {University of Chicago Press}}, {\em Chicago Manual of Style}, University
+  of Chicago Press, Chicago, 16th~ed., 2010.
+\newblock \\ \\ An encyclopedic reference on style for print media, a widely
+  used standard. For RIPS reports, it is used as the authority of first resort.
+
+\bibitem{Voss}
+{\sc H.~Voss}, {\em PSTricks: Graphics and PostScript for {\TeX} and {\LaTeX}},
+  UIT, Cambridge, England, 2011.
+
+\bibitem{WalkerTaylor}
+{\sc J.~R. Walker and T.~Taylor}, {\em The Columbia Guide to Online Style},
+  Columbia University Press, Chicago, second~ed., 2006.
+
+\end{thebibliography}

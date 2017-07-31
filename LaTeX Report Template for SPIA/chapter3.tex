@@ -1,0 +1,86 @@
+\chapter{Mathematical typesetting}\label{Ch:MathTypesetting}
+
+In {\LaTeX}, formulas can be coded by enclosing them between dollar signs, so the expression $x^2$ is coded as \verb1$x^2$1.
+Also note that the circumflex (\verb ^ ) is used to express the power or a superscript.
+For another example, $a^{23}$ can be coded as \verb1$a^{23}$1, where curly brackets must be used.
+To write subscripts, one uses the underscore (\verb _ ), so $x_2$ is coded as \verb1$x_2$1 and $x_{23}$ is coded as \verb1$x_{23}$1.
+
+Here are a few more examples of mathematical typesetting:
+$\int_\alpha^{2\beta} f(x)\, dx$ is coded as \verb1$\int_\alpha^{2\beta} f(x)\, dx$1, and $\sqrt{x+5}$ is coded as \verb1$\sqrt{x+5}$1.
+Note that \verb1\,1 in the code for the preceding integral ensures that the proper space appears before $dx$;
+in typography this (setting the space between symbols) is called \emph{kerning}.
+
+Often you will want to \emph{display} a formula, that is, present the formula on a separate line---convenient for large formulas.
+For this you use the delimiters \verb1\[1 and \verb1\]1.
+So, to write
+\[ \sum_{k=1}^n k^2 = \frac{1}{3}n^3 + \frac{1}{2}n^2 + \frac{1}{6}n \]
+you can use \verb4\[ \sum_{k=1}^n k^2 = \frac{1}{3}n^3 + \frac{1}{2}n^2 + \frac{1}{6}n \]4, in which some unnecessary spaces were included for clarity.
+
+Displayed equations can be numbered, and they can be labeled for reference.
+The example is boxed for illustration:
+
+\def\skipl{0.2in}
+\vspace{\skipl}
+\fbox{
+\begin{minipage}{5in}
+This is an equation:
+\begin{equation}\label{eq:pythagora}
+a^2+b^2=c^2.
+\end{equation}
+Equation \eqref{eq:pythagora} is the Pythagorean theorem.
+\end{minipage}}
+\vspace{\skipl}
+
+\noindent
+The above was coded as follows:
+
+\vspace{\skipl}
+\fbox{
+\begin{minipage}{5in}
+{\tt This is an equation:}\\
+ {\tt $\backslash$begin\{equation\}$\backslash$label\{eq:pythagora\}}\\
+{\tt a$\widehat \ $2+b$\widehat \ $2=c$\widehat \ $2.\\
+$\backslash$end\{equation\}}\\
+{\tt Equation $\backslash$eqref\{eq:pythagora\} is the Pythagorean theorem.}
+\end{minipage}
+}
+\vspace{\skipl}
+
+You can find many more mathematical examples to use as templates on the Internet.
+A good place to start is to see the files placed for your convenience in the ``templates\_etc'' folder on IPAM's ``R''  (RIPS) drive.
+
+When you have a theorem, you can set it in a {\em theorem environment}, which
+presents your theorem in a special font:
+
+\begin{theorem}[\textsc{Gauss-Bonnet}]
+Here you state the theorem.
+\end{theorem}
+
+\noindent When you have a lemma, you can set it in a {\em lemma environment}:
+
+\begin{lemma}[\texttt{Chebychef}]
+Statement of lemma goes here.
+\end{lemma}
+
+\noindent You may also have need of definitions.  These can go in a {\em definition environment}:
+
+\begin{definition}[\texttt{Idempotent Operator}]
+The definition goes here.
+\end{definition}
+
+\noindent Note that in the three preceding examples all the body text is set in italics.  See the {\LaTeX} source for this chapter to see how these examples are coded.
+
+\vspace{8pt}
+
+There exists a wealth of information on the Internet on how to use {\LaTeX}---just type {\tt latex tutorial} in any search engine.
+A good one is at the LaTeX Project site:
+
+\vspace{8pt}
+$\texttt{http://latex-project.org/}$
+
+\vspace{8pt}
+\noindent See also \emph{More Math Into {\LaTeX}} by Gr\"{a}tzer
+\cite{gratzer} and other books mentioned in the references.
+
+
+ \endinput

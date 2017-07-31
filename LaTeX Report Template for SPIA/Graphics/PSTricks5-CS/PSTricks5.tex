@@ -1,0 +1,49 @@
+\documentclass{article}
+
+\usepackage{pstricks,pst-plot,pst-text,pst-node}
+%\usepackage{pst-pdf,pst-text,pst-eucl,pstricks-add}
+\usepackage{color}
+
+%%%  \tiny, \scriptsize, \footnotesize, \small, \normalsize, \large, \Large, \LARGE, \huge, \Huge
+
+\begin{document}
+\pagestyle{empty}
+
+\newcommand{\ang}{40\space}
+
+\psset{unit=4cm}
+\begin{pspicture}(-0.3,+0.3)(+1.3,+1.3)
+\SpecialCoor
+
+% The XY axes
+\psaxes[linewidth=.01,ticks=none,labels=none,arrowscale=1.5]{->}(0,0)(-0.1,-0.1)(1.2,1.2)   % xy-axes
+\uput[l](0,1.1){$y$}
+\uput[d](1.1,0){$x$}
+
+\cnode*[linecolor=red,fillcolor=red,fillstyle=solid](! \ang 2 div cos \ang 2 div sin){.016}{B}
+\pscircle[linecolor=black,fillcolor=black,fillstyle=solid](! 1 \ang tan){.016}
+
+% The hypotenuse and leg
+\psline[linewidth=.01](0,0)(! \ang cos \ang sin)(! \ang cos 0)
+
+% Tangents
+\psline[linewidth=.01,linecolor=blue](1.0,0)(! 1 \ang 2 div tan)(! \ang cos \ang sin)
+\pscircle[linecolor=blue,fillcolor=blue,fillstyle=solid](! 1 \ang 2 div tan){.016}
+
+\psline[linewidth=.01,linestyle=dashed](! 1 \ang 2 div tan)(! 1 \ang tan)(! \ang cos \ang sin)
+
+% An arc of the unit circle
+\psarc[linecolor=red,linewidth=.01,arrowscale=1.2]{*-*}(0,0){1}{0.0}{\ang}  
+\psarc[linewidth=.01,linestyle=dotted,dotsep=.01](0,0){.15}{0.0}{\ang}  
+
+% Coordinate labels for various points:
+\uput[u](! 1 \ang tan){$(1, \tan \theta)$}  %  Near top of external tangent
+\uput[ul](! \ang cos \ang sin){\red $(\cos \theta, \sin \theta)$}  %  Top of arc
+\uput[ul](! \ang cos 0){\rnode{A}{\red $(\cos \frac{\theta}{2}, \sin \frac{\theta}{2})$}}  %  Half-way on arc
+\rput(! \ang 2 div cos .2 mul \ang 2 div sin .2 mul){$\theta$}
+
+\ncline[linecolor=red,linewidth=.01,linestyle=dashed]{->}{A}{B}
+
+\end{pspicture}
+
+\end{document}
