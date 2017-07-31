@@ -25,6 +25,7 @@ check_step         = 5
 save_step          = check_step * 10
 validation_step    = check_step * 5
 with_normalization = 1                    # 1 for turning on normalization
+with_attention     = 1
 
 data_path            = '/Users/ChlorophyII/SPIA/code/SPIA-2017-data/'
 train_data_path      = data_path+'cut'+'_training/'
@@ -53,6 +54,7 @@ STD_T = tf.placeholder(tf.float32, [1, n_inputs])
 keep_prob = tf.placeholder(tf.float32)
 global_step = tf.Variable(0, trainable=False)
 normalization = tf.Variable(with_normalization, trainable=False)
+attention     = tf.Variable(with_attention, trainable=False)
 
 with tf.variable_scope('statistics'):
     mean_source = tf.Variable(MS)
