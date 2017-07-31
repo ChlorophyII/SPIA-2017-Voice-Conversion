@@ -16,6 +16,7 @@ n_steps            = 1072                 # The max number of frames
 n_inputs           = 49                   # Width of each frame
 n_neurons          = [64, 128, 256, 256, 128, 64]
 n_layers           = 6
+attention_size     = 128
 learning_rate      = 0.0001
 keep_probability   = 0.9
 n_epoches          = 30
@@ -84,10 +85,17 @@ for n in range(n_layers):
         outputs, states = tf.nn.bidirectional_dynamic_rnn(cells_fw[n], cells_bw[n], outputs, dtype=tf.float32)
     outputs = tf.concat(outputs, 2)
 
+if attention == 1:
+    attention_mec = tf.contrib.seq2seq.LuongAttention(attention_size,outputs)
+    attention_cell = tf.contrib.rnn.LSTMCell(attention_size)
+    attention_cell = tf.contrib.seq2seq.AttentionWrapper(attention_cell,attention_mec,alignment_history=True)
+    outputs, _ = tf.nn.dynamic_rnn(attention_cell,outputs,dtype=tf.float32)
+    
 outputs = tf.layers.dense(outputs, n_inputs)
+
 if normalization == 1:
     outputs = tf.add(tf.multiply(outputs, std_source), mean_source)
-
+    
 # Loss function
 
 loss_factor = 10 * math.sqrt(2) / math.log(10)
@@ -147,22 +155,27 @@ with tf.Session(config=config) as sess:
         step = global_step.eval()
         epoch = 1 + (step * batch_size - 1) / training_feeder.n_data # -1 to fix the error
         print ("Start training...")
+        training_loss_rec = []
+        validation_loss_rec = []
         while epoch < n_epoches:
             X_batch, Y_batch, weights, batch_filenames = training_feeder.get_batch()
             _, step_loss, step, results = sess.run([training_op, loss, global_step, outputs], feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:keep_probability})
             loss_sum = loss_sum+step_loss
-
+            training_loss_rec.append(step_loss)
             if step % check_step == 0:
                 epoch = 1 + (step * batch_size - 1) / training_feeder.n_data # -1 to fix the error
                 if step % validation_step == 0:
                     X_batch, Y_batch, weights, batch_filenames = validation_feeder.get_batch()
                     validation_loss = loss.eval(feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:1})
                     print_step(step, epoch, loss_sum/check_step, validation_loss)
+                    validation_loss_rec.append(validation_loss)
                 else:
                     print_step(step, epoch, loss_sum/check_step)
                 loss_sum = 0
             if step % save_step == 0:
                 saver.save(sess, checkpoint_path+'vc', global_step=global_step)
+                np.save(checkpoint_path+str(step)+"training losses",training_loss_rec)
+                np.save(checkpoint_path+str(step)+"validation losses",validation_loss_rec)
                 print ("Parameters saved.")
     elif phase == 'test':
         print ("Start testing...")
@@ -175,6 +188,6 @@ with tf.Session(config=config) as sess:
         conversion_result = outputs.eval(feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:1})
         conversion_feeder.save_outputs(conversion_result, batch_filenames)
         print ("Converted data saved at:")
-        print conversion_data_path
+        print (conversion_data_path)
     else:
         assert False, "\"phase\" is incorrect."

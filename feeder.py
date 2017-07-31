@@ -12,7 +12,7 @@ class feeder(object):
         self._path = path
         self._n_steps = n_steps
         self._n_inputs = n_inputs
-        self._filenames = [name for name in os.listdir(self._path) if os.path.isfile(self._path+name) and '.dat' in name and '.csv' not in name]
+        self._filenames = [name for name in os.listdir(self._path) if os.path.isfile(self.i_path+name) and '.dat' in name and '.csv' not in name]
         self._data = {}
         if self._phase == 'conversion':
             self._n_data = len(self._filenames)
@@ -98,12 +98,12 @@ class feeder(object):
             if len(self._epoch_filenames) < self._batch_size:
                 batch_filenames = self._epoch_filenames
                 self._epoch_filenames = self._pair_filenames
-                rest = random.sample(self._epoch_filenames, self._batch_size-len(batch_filenames))
+                rest = random.sample(self._epoch_filenames, int(self._batch_size-len(batch_filenames)))
                 batch_filenames = batch_filenames + rest
                 self._epoch_filenames = [name for name in self._epoch_filenames \
                                          if name not in rest]
             else:
-                batch_filenames = random.sample(self._epoch_filenames, self._batch_size)
+                batch_filenames = random.sample(self._epoch_filenames, int(self._batch_size))
                 self._epoch_filenames = [name for name in self._epoch_filenames \
                                          if name not in batch_filenames]
             return batch_filenames
