@@ -75,25 +75,25 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
 training_op = optimizer.minimize(loss, global_step=global_step)
 
 def load_data(phase):
-    print "Loading data..."
+    print ("Loading data...")
     if phase == 'training' or phase == 'validation':
         global training_feeder
         training_feeder = feeder(batch_size, train_data_path, n_steps, n_inputs, phase='training')
-        print "\"training_feeder\" is ready."
+        print ("\"training_feeder\" is ready.")
         global validation_feeder
         validation_feeder = feeder(-1, validation_data_path, n_steps, n_inputs, phase='validation')
-        print "\"validation_feeder\" is ready."
+        print ("\"validation_feeder\" is ready.")
     elif phase == 'test':
         global test_feeder
         test_feeder = feeder(-1, validation_data_path, n_steps, n_inputs, phase='test')
-        print "\"test_feeder\" is ready."
+        print ("\"test_feeder\" is ready.")
     elif phase == 'conversion':
         global conversion_feeder
         conversion_feeder = feeder(-1, conversion_data_path, n_steps, n_inputs, phase='conversion')
-        print "\"conversion_feeder\" is ready."
+        print ("\"conversion_feeder\" is ready.")
     else:
         assert False, "\"phase\" is incorrect."
-    print "Data loaded."
+    print ("Data loaded.")
 
 def print_step(step, epoch, loss, validation_loss=-1):
     if validation_loss == -1:
@@ -111,7 +111,7 @@ with tf.Session(config=config) as sess:
     if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
         print ("Loading model parameters from %s" % ckpt.model_checkpoint_path)
         tf.reset_default_graph()
-        print "PHASE", phase
+        print ("PHASE", phase)
         ckpt = tf.train.get_checkpoint_state(checkpoint_path)
         saver = tf.train.import_meta_graph(ckpt.model_checkpoint_path+".meta", clear_devices=True)
         saver.restore(sess, ckpt.model_checkpoint_path)
@@ -123,15 +123,18 @@ with tf.Session(config=config) as sess:
         sess.run(init)
 
     if phase == 'training':
-        print "In training"
+        print ("In training")
         loss_sum = 0
         step = global_step.eval()
         epoch = 1 + (step * batch_size - 1) / training_feeder.n_data # -1 to fix the error
-        print "Start training..."
+        print ("Start training...")
+        training_loss_rec = []
+        validation_loss_rec = []
         while epoch < n_epoches:
             X_batch, Y_batch, weights, batch_filenames = training_feeder.get_batch()
             _, step_loss, step, results = sess.run([training_op, loss, global_step, outputs], feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:keep_probability})
             loss_sum = loss_sum+step_loss
+            training_loss_rec.append(step_loss)
 
             if step % check_step == 0:
                 epoch = 1 + (step * batch_size - 1) / training_feeder.n_data # -1 to fix the error
@@ -139,24 +142,27 @@ with tf.Session(config=config) as sess:
                     X_batch, Y_batch, weights, batch_filenames = validation_feeder.get_batch()
                     validation_loss = loss.eval(feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:1})
                     print_step(step, epoch, loss_sum/check_step, validation_loss)
+                    validation_loss_rec.append(validation_loss)
                 else:
                     print_step(step, epoch, loss_sum/check_step)
                 loss_sum = 0
             if step % save_step == 0:
                 saver.save(sess, checkpoint_path+'vc', global_step=global_step)
+                np.save(checkpoint_path+str(step)+"training losses",training_loss_rec)
+                np.save(checkpoint_path+str(step)+"validation losses",validation_loss_rec)
                 print ("Parameters saved.")
     elif phase == 'test':
-        print "Start testing..."
+        print ("Start testing...")
         X_batch, Y_batch, weights, batch_filenames = test_feeder.get_batch()
         test_loss = loss.eval(feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:1})
-        print "Test loss: {0}".format(test_loss)
+        print ("Test loss: {0}".format(test_loss))
     elif phase == 'conversion':
-        print "Start converting..."
+        print ("Start converting...")
         X_batch, Y_batch, weights, batch_filenames = conversion_feeder.get_batch()
         conversion_result = outputs.eval(feed_dict={X:X_batch, Y:Y_batch, W:weights, keep_prob:1})
         conversion_feeder.save_outputs(conversion_result, batch_filenames)
-        print "Converted data saved at:"
-        print conversion_data_path
+        print ("Converted data saved at:")
+        print (conversion_data_path)
     else:
-        print "WTF"
+        print ("WTF")
         assert False, "\"phase\" is incorrect."
