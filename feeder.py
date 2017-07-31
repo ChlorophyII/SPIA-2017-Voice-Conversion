@@ -12,7 +12,7 @@ class feeder(object):
         self._path = path
         self._n_steps = n_steps
         self._n_inputs = n_inputs
-        self._filenames = [name for name in os.listdir(self._path) if os.path.isfile(self.i_path+name) and '.dat' in name and '.csv' not in name]
+        self._filenames = [name for name in os.listdir(self._path) if os.path.isfile(self._path+name) and '.dat' in name and '.csv' not in name]
         self._data = {}
         if self._phase == 'conversion':
             self._n_data = len(self._filenames)
