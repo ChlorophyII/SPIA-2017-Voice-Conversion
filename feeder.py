@@ -137,8 +137,8 @@ class feeder(object):
             "Only in \"conversion\" phase data need to be saved, isn't it?"
         i = 0
         for filename in batch_filenames:
-            output_filename = self._path+string.replace(filename, ".dat", "_converted.csv")
-            with open(output_filename, 'w') as output_file:
+            output_filename = self._path+filename.replace(".dat", "_converted.csv")
+            with open(output_filename, 'wb') as output_file:
                 num_rows, num_cols = self._data[filename+'_shape']
                 np.savetxt(output_file, np.transpose(outputs[i,:num_rows,:num_cols]), delimiter=',')
             i += 1
